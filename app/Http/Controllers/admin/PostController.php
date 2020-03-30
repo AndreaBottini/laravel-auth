@@ -16,7 +16,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        dd('post admin');
+        $posts = Post::all();
+        return view('admin.posts.index', compact('posts'));
     }
 
     /**
@@ -26,7 +27,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.posts.create');
+
     }
 
     /**
@@ -37,7 +39,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $data = $request->all();
+
+        $newPost = new Post;
+        $newPost->title = $data['title'];
+        $newPost->body = $data['body'];
+        
+        $newPost->save();
+
+        return redirect()->route('admin.posts.index');  
     }
 
     /**
