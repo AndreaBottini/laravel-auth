@@ -5,9 +5,21 @@ namespace App\Http\Controllers\Admin;
 use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {   
+    private $validateRules;
+
+    public function __construct()
+    {
+    
+        $this->validateRules = [
+            'title' => 'required|string|max:255',
+            'body' => 'required|string'
+        ];
+    }
     //solo admin
     /**
      * Display a listing of the resource.
@@ -16,7 +28,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::where('user_id', Auth::id())->get();
+        // $posts= Post::all();
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -39,17 +52,27 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        // dd('store');
+        $idUser = Auth::user()->id;
+    
         // dd($request->all());
         $data = $request->all();
+        $request->validate($this->validateRules);
 
         $newPost = new Post;
         $newPost->title = $data['title'];
         $newPost->body = $data['body'];
-        $newPost->slug = $data['slug'];
-        $newPost->user_id = 1;
-        $newPost->save();
+        $newPost->user_id = $idUser;
+        $newPost->slug = Str::finish(Str::slug($newPost->title), rand(1, 10000));
 
-        return redirect()->route('admin.posts.index');  
+        $saved = $newPost->save();
+        if(!$saved) {
+            return redirect()->back(); 
+        }
+
+        return redirect()->route('admin.posts.show', $newPost->slug);
+
+         
     }
 
     /**
@@ -58,9 +81,11 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($slug)
     {
-        //
+        $post = Post::where('slug', $slug)->first();
+        
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
@@ -94,6 +119,12 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if (empty($post)) {
+            abort(404);
+        }
+
+        $post->delete();
+
+        return redirect()->route('admin.posts.index');
     }
 }
