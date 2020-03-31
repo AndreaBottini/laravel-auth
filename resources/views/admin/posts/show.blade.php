@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div>
-  {{-- <a class="btn btn-primary" href="{{route('admin.posts.create')}}">Crea un nuovo post</a> --}}
+  <a class="btn btn-danger mb-3" href="{{route('admin.posts.index')}}">Pagina Inziale</a>
     </div>
         <table class="table">
             <thead>
