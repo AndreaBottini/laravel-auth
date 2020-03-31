@@ -14,6 +14,7 @@
             <textarea class="form-control" name="body" id="body" cols="60" rows="5">{{$post->body}}</textarea>
             </div>
             <button class="btn btn-success" type="submit">Salva</button>
+            <a class="btn btn-danger" href="{{route('admin.posts.index')}}">Indietro</a>
       </form>
     </div>
   </div>
