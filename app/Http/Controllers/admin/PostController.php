@@ -45,7 +45,8 @@ class PostController extends Controller
         $newPost = new Post;
         $newPost->title = $data['title'];
         $newPost->body = $data['body'];
-        
+        $newPost->slug = $data['slug'];
+        $newPost->user_id = 1;
         $newPost->save();
 
         return redirect()->route('admin.posts.index');  

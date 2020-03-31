@@ -10,9 +10,11 @@
     <h1>CREA IL TUO POST<h1>
 <div class="form">
     <form class="" action="{{route('posts.store')}}" method="POST">
-    <input type="text" name="title" placeholder="Titolo" value="">
-    <input type="text" name="body" placeholder="Corpo dell'articolo" value="" cols="20" rows="5">
-    <button type="submit" name="button">Inserisci</button>
+        <ul>
+            <li><input type="text" name="title" placeholder="Titolo" value=""></li>
+            <li><textarea type="text" name="body" placeholder="Corpo dell'articolo" value="" cols="20" rows="5"></textarea></li>
+            <button type="submit" name="button">Inserisci</button>
+        </ul>
     @csrf
     @method('POST')
   </form>
