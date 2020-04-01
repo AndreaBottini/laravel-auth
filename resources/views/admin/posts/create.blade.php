@@ -13,9 +13,19 @@
           <label for="body">Body</label>
           <textarea class="form-control" name="body" id="body" cols="60" rows="5">
           </textarea>
+        </div> 
+      
+        <div class="form-group">
+          <label for="tags">Tags</label>
+        @foreach ($tags as $tag)
+        <div>
+          <span>{{$tag->name}}</span>
+          <input type="checkbox" name="tags[]" value="{{$tag->id}}">
+        </div>
+        @endforeach
         </div>
         <button class="btn btn-success" type="submit">Salva le Modifiche</button>
       </form>
-    </div>
-  </div>
-  @endsection
+    </div>  
+</div>  
+@endsection
