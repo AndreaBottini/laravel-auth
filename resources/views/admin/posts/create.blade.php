@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-      <form action="{{route('admin.posts.store')}}" method="POST">
+      <form action="{{route('admin.posts.store')}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')
         <div class="form-group">
@@ -23,6 +23,9 @@
           <input type="checkbox" name="tags[]" value="{{$tag->id}}">
         </div>
         @endforeach
+        </div>
+        <div class="form-group">
+          <input type="file" name="" id="">
         </div>
         <button class="btn btn-success" type="submit">Salva le Modifiche</button>
       </form>

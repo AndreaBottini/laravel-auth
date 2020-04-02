@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
 class PostController extends Controller
@@ -20,7 +21,8 @@ class PostController extends Controller
     
         $this->validateRules = [
             'title' => 'required|string|max:255',
-            'body' => 'required|string'
+            'body' => 'required|string',
+            'path_image' =>'image'
         ];
     }
     //solo admin
@@ -64,11 +66,14 @@ class PostController extends Controller
         $data = $request->all();
         $request->validate($this->validateRules);
 
+        $path = Storage::disk('public')->put('images', $data['path_image']);
+
         $newPost = new Post;
         $newPost->title = $data['title'];
         $newPost->body = $data['body'];
         $newPost->user_id = $idUser;
         $newPost->slug = Str::finish(Str::slug($newPost->title), rand(1, 10000));
+        $newPost->path_image = $path;
 
         $saved = $newPost->save();
 
