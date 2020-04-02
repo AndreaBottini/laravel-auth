@@ -13,7 +13,16 @@
             <label for="body">Body</label>
             <textarea class="form-control" name="body" id="body" cols="60" rows="5">{{$post->body}}</textarea>
             </div>
-            <button class="btn btn-success" type="submit">Salva</button>
+            <div class="form-group">
+              <label for="tags">Tags</label>
+            @foreach ($tags as $tag)
+            <div>
+              <span>{{$tag->name}}</span>
+            <input type="checkbox" name="tags[]" value="{{$tag->id}}" {{($post->tags->contains($tag->id)) ? 'checked' : ''}}>
+            </div>
+            @endforeach
+            </div>
+            <button class="btn btn-success" type="submit">Salva le Modifiche</button>
             <a class="btn btn-danger" href="{{route('admin.posts.index')}}">Indietro</a>
       </form>
     </div>

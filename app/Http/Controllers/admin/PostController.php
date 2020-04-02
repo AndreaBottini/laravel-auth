@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Tag;
 use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use App\Tag;
+
 
 class PostController extends Controller
 {   
@@ -70,13 +71,18 @@ class PostController extends Controller
         $newPost->slug = Str::finish(Str::slug($newPost->title), rand(1, 10000));
 
         $saved = $newPost->save();
+
         if(!$saved) {
             return redirect()->back(); 
         }
 
-        return redirect()->route('admin.posts.show', $newPost->slug);
-
-         
+        //creo collegamento tra le tabelle ponte, passando array tags
+        $tags = $data['tags'];
+        if(!empty($tags)) {
+            $newPost->tags()->attach($tags);
+        }
+            // dd($newPost->tags);
+        return redirect()->route('admin.posts.show', $newPost->slug);  
     }
 
     /**
@@ -101,8 +107,13 @@ class PostController extends Controller
     public function edit($slug)
     {
         $post = Post::where('slug', $slug)->first();
-        
-        return view('admin.posts.edit', compact('post'));
+        $tags = Tag::all();
+        $data = [ 
+            'tags' => $tags,
+            'post' => $post
+        ];
+
+        return view('admin.posts.edit', $data);
     }
 
     /**
@@ -139,6 +150,11 @@ class PostController extends Controller
          if(!$updated) {
              return redirect()->back(); 
          }
+
+         $tags = $data['tags'];
+         if (!empty($tags)) {
+            $post->tags()->attach($tags);
+        }
  
          return redirect()->route('admin.posts.show', $post->slug);
  
@@ -156,6 +172,7 @@ class PostController extends Controller
             abort(404);
         }
 
+        $post->tags()->detach();
         $post->delete();
 
         return redirect()->route('admin.posts.index');
